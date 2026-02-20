@@ -140,4 +140,9 @@ export async function examPublish(id: number) {
 export async function examUnpublish(id: number) {
   return await examServiceInstance.get("/exam/unpublish/" + id);
 }
+
+// 删除考试
+export async function examDelete(id: number) {
+  return await examServiceInstance.delete("/exam/delete/" + id);
+}
 // #endregion
