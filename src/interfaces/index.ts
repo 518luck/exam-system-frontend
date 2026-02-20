@@ -6,6 +6,7 @@ import axios, {
 import type { RegisterUser } from "../pages/Register";
 import type { UpdatePassword } from "../pages/UpdatePassword";
 import { message } from "antd";
+import type { ExamAdd } from "../pages/ExamList/ExamAddModal";
 
 // #region 注册接口和实体
 const userServiceInstance = axios.create({
@@ -123,5 +124,10 @@ examServiceInstance.interceptors.response.use(
 // 获取考试列表
 export async function examList() {
   return await examServiceInstance.get("/exam/list");
+}
+
+// 新增试卷
+export async function examAdd(values: ExamAdd) {
+  return await examServiceInstance.post("/exam/add", values);
 }
 // #endregion

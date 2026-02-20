@@ -3,6 +3,7 @@ import "./index.scss";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { examList } from "../../interfaces";
+import { ExamAddModal } from "./ExamAddModal";
 
 interface Exam {
   id: number;
@@ -14,6 +15,7 @@ interface Exam {
 
 export function ExamList() {
   const [list, setList] = useState<Array<Exam>>();
+  const [isExamAddModalOpen, setIsExamAddModalOpen] = useState(false);
 
   async function query() {
     try {
@@ -45,7 +47,9 @@ export function ExamList() {
 
       <div className="body">
         <div className="operate">
-          <Button type="primary">新建试卷</Button>
+          <Button type="primary" onClick={() => setIsExamAddModalOpen(true)}>
+            新建试卷
+          </Button>
         </div>
 
         <div className="list">
@@ -84,6 +88,13 @@ export function ExamList() {
           })}
         </div>
       </div>
+      <ExamAddModal
+        isOpen={isExamAddModalOpen}
+        handleClose={() => {
+          setIsExamAddModalOpen(false);
+          query();
+        }}
+      />
     </div>
   );
 }
