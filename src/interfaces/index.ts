@@ -2,6 +2,7 @@ import axios from "axios";
 import type { RegisterUser } from "../pages/Register";
 import type { UpdatePassword } from "../pages/UpdatePassword";
 
+// #region 注册接口和实体
 const userServiceInstance = axios.create({
   baseURL: "http://localhost:3001/",
   timeout: 3000,
@@ -44,3 +45,15 @@ export async function updatePassword(data: UpdatePassword) {
   delete data.confirmPassword;
   return await userServiceInstance.post("/user/update_password", data);
 }
+// #endregion
+
+// #region exam 接口和实体
+const examServiceInstance = axios.create({
+  baseURL: "http://localhost:3002/",
+  timeout: 3000,
+});
+
+export async function examList() {
+  return await examServiceInstance.get("/exam/list");
+}
+// #endregion
