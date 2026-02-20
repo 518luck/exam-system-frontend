@@ -2,31 +2,12 @@ import { Button, Form, Input, message } from "antd";
 import "./index.css";
 import axios from "axios";
 import { login } from "../../interfaces";
+import { useNavigate } from "react-router";
 
 interface LoginUser {
   username: string;
   password: string;
 }
-
-const onFinish = async (values: LoginUser) => {
-  try {
-    const res = await login(values.username, values.password);
-    if (res.status === 201 || res.status === 200) {
-      message.success("登录成功");
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("userInfo", JSON.stringify(res.data.user));
-    }
-  } catch (e) {
-    // 使用 axios 提供的检查工具
-    if (axios.isAxiosError(e)) {
-      // 此时 e 被自动识别为 AxiosError 类型
-      message.error(e.response?.data?.message || "登录失败，请检查网络");
-    } else {
-      // 处理非 Axios 错误（如代码逻辑错误）
-      message.error("发生意外错误");
-    }
-  }
-};
 
 const layout1 = {
   labelCol: { span: 4 },
@@ -39,6 +20,31 @@ const layout2 = {
 };
 
 export function Login() {
+  const navigate = useNavigate();
+
+  // 登录表单提交
+  const onFinish = async (values: LoginUser) => {
+    try {
+      const res = await login(values.username, values.password);
+      if (res.status === 201 || res.status === 200) {
+        message.success("登录成功");
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("userInfo", JSON.stringify(res.data.user));
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
+      }
+    } catch (e) {
+      // 使用 axios 提供的检查工具
+      if (axios.isAxiosError(e)) {
+        // 此时 e 被自动识别为 AxiosError 类型
+        message.error(e.response?.data?.message || "登录失败，请检查网络");
+      } else {
+        // 处理非 Axios 错误（如代码逻辑错误）
+        message.error("发生意外错误");
+      }
+    }
+  };
   return (
     <div id="login-container">
       <h1>考试系统</h1>
