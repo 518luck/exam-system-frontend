@@ -130,4 +130,14 @@ export async function examList() {
 export async function examAdd(values: ExamAdd) {
   return await examServiceInstance.post("/exam/add", values);
 }
+
+// 发布考试
+export async function examPublish(id: number) {
+  return await examServiceInstance.get("/exam/publish/" + id);
+}
+
+// 取消发布考试
+export async function examUnpublish(id: number) {
+  return await examServiceInstance.get("/exam/unpublish/" + id);
+}
 // #endregion

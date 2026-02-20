@@ -2,7 +2,7 @@ import { Button, message } from "antd";
 import "./index.scss";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { examList } from "../../interfaces";
+import { examList, examPublish, examUnpublish } from "../../interfaces";
 import { ExamAddModal } from "./ExamAddModal";
 
 interface Exam {
@@ -17,6 +17,7 @@ export function ExamList() {
   const [list, setList] = useState<Array<Exam>>();
   const [isExamAddModalOpen, setIsExamAddModalOpen] = useState(false);
 
+  // 查询考试列表
   async function query() {
     try {
       const res = await examList();
@@ -38,6 +39,27 @@ export function ExamList() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     query();
   }, []);
+
+  // 切换发布状态(考试状态)
+  async function changePublishState(id: number, publish: boolean) {
+    console.log("🚀 ~ changePublishState ~ publish:", publish);
+    try {
+      const res = publish ? await examUnpublish(id) : await examPublish(id);
+      if (res.status === 201 || res.status === 200) {
+        message.success(publish ? "已取消发布" : "已发布");
+        query();
+      }
+    } catch (e) {
+      // 使用 axios 提供的检查工具
+      if (axios.isAxiosError(e)) {
+        // 此时 e 被自动识别为 AxiosError 类型
+        message.error(e.response?.data?.message || "登录失败，请检查网络");
+      } else {
+        // 处理非 Axios 错误（如代码逻辑错误）
+        message.error("发生意外错误");
+      }
+    }
+  }
 
   return (
     <div id="ExamList-container">
@@ -63,6 +85,7 @@ export function ExamList() {
                     className="btn"
                     type="primary"
                     style={{ background: "darkblue" }}
+                    onClick={() => changePublishState(item.id, item.isPublish)}
                   >
                     {item.isPublish ? "停止" : "发布"}
                   </Button>
