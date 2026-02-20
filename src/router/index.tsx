@@ -3,6 +3,7 @@ import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import { UpdatePassword } from "../pages/UpdatePassword";
 import { ExamList } from "../pages/ExamList";
+import { Edit } from "../pages/Edit";
 
 const routes: RouteObject[] = [
   {
@@ -20,6 +21,10 @@ const routes: RouteObject[] = [
   {
     path: "update_password",
     Component: UpdatePassword,
+  },
+  {
+    path: "exam/:id",
+    Component: Edit,
   },
 ];
 export const router = createBrowserRouter(routes);
