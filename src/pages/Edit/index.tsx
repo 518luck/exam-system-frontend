@@ -8,10 +8,13 @@ import {
   Radio,
   InputNumber,
   Segmented,
+  message,
 } from "antd";
 import { MaterialItem } from "./Material";
 import { useDrop } from "react-dnd";
 import { useEffect, useState } from "react";
+import axios from "axios";
+import { examFind } from "../../interfaces";
 const { TextArea } = Input;
 
 export type Question = {
@@ -27,7 +30,9 @@ export type Question = {
 // const json: Array<Question> = [];
 
 export function Edit() {
-  let { id } = useParams();
+  // 从路由参数中获取 id
+  const { id } = useParams();
+
   const [form] = Form.useForm();
   // 试卷数据
   const [json, setJson] = useState<Array<Question>>([]);
@@ -39,6 +44,37 @@ export function Edit() {
   useEffect(() => {
     form.setFieldsValue(json.filter((item) => item.id === curQuestionId)[0]);
   }, [curQuestionId, form, json]);
+
+  async function query() {
+    if (!id) {
+      return;
+    }
+    try {
+      const res = await examFind(+id);
+      if (res.status === 201 || res.status === 200) {
+        try {
+          setJson(JSON.parse(res.data.content));
+        } catch {
+          message.error("试卷数据格式错误");
+        }
+      }
+    } catch (e) {
+      // 使用 axios 提供的检查工具
+      if (axios.isAxiosError(e)) {
+        // 此时 e 被自动识别为 AxiosError 类型
+        message.error(e.response?.data?.message || "登录失败，请检查网络");
+      } else {
+        // 处理非 Axios 错误（如代码逻辑错误）
+        message.error("发生意外错误");
+      }
+    }
+  }
+
+  useEffect(() => {
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+    query();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 渲染组件
   function renderComponents(arr: Array<Question>) {
