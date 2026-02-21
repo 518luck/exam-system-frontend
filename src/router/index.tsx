@@ -4,6 +4,7 @@ import { Register } from "../pages/Register";
 import { UpdatePassword } from "../pages/UpdatePassword";
 import { ExamList } from "../pages/ExamList";
 import { Edit } from "../pages/Edit";
+import { Exam } from "../pages/Exam";
 
 const routes: RouteObject[] = [
   {
@@ -25,6 +26,10 @@ const routes: RouteObject[] = [
   {
     path: "edit/:id",
     Component: Edit,
+  },
+  {
+    path: "exam/:id",
+    Component: Exam,
   },
 ];
 export const router = createBrowserRouter(routes);

@@ -1,4 +1,4 @@
-import { Button, message, Popconfirm } from "antd";
+import { Button, message, Popconfirm, Popover } from "antd";
 import "./index.scss";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -10,7 +10,8 @@ import {
 } from "../../interfaces";
 import { ExamAddModal } from "./ExamAddModal";
 import { useNavigate } from "react-router";
-
+import { Typography } from "antd";
+const { Paragraph } = Typography;
 interface Exam {
   id: number;
   name: string;
@@ -143,6 +144,18 @@ export function ExamList() {
                     >
                       编辑
                     </Button>
+                    {/* Popover 组件的意思是 “气泡卡片”。 */}
+                    <Popover
+                      //window.location.origin：获取当前网站的域名
+                      content={
+                        <Paragraph copyable>
+                          {window.location.origin + "/exam/" + item.id}
+                        </Paragraph>
+                      }
+                      trigger="click"
+                    >
+                      <Button type="default">考试链接</Button>
+                    </Popover>
 
                     <Popconfirm
                       title="试卷删除"

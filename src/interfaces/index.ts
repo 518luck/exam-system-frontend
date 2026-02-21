@@ -156,3 +156,22 @@ export async function examSave(data: { id: number; content: string }) {
   return await examServiceInstance.post("/exam/save", data);
 }
 // #endregion
+
+// #region answer 接口和实体
+const answerServiceInstance = axios.create({
+  baseURL: "http://localhost:3003/",
+  timeout: 3000,
+});
+
+answerServiceInstance.interceptors.request.use(requestInterceptor);
+
+answerServiceInstance.interceptors.response.use(
+  responseIntercepor,
+  responseErrorIntercepor,
+);
+
+// 添加答卷
+export async function answerAdd(data: { examId: number; content: string }) {
+  return await answerServiceInstance.post("/answer/add", data);
+}
+// #endregion
