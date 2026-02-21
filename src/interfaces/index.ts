@@ -141,13 +141,18 @@ export async function examUnpublish(id: number) {
   return await examServiceInstance.get("/exam/unpublish/" + id);
 }
 
-// 删除考试
+// 删除试卷
 export async function examDelete(id: number) {
   return await examServiceInstance.delete("/exam/delete/" + id);
 }
 
-// 查询考试
+// 查询试卷
 export async function examFind(id: number) {
   return await examServiceInstance.get("/exam/find/" + id);
+}
+
+// 保存试卷
+export async function examSave(data: { id: number; content: string }) {
+  return await examServiceInstance.post("/exam/save", data);
 }
 // #endregion

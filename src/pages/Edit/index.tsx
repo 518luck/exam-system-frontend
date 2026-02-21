@@ -9,12 +9,14 @@ import {
   InputNumber,
   Segmented,
   message,
+  Space,
 } from "antd";
 import { MaterialItem } from "./Material";
 import { useDrop } from "react-dnd";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { examFind } from "../../interfaces";
+import { examFind, examSave } from "../../interfaces";
+import { PreviewModal } from "./PreviewModal";
 const { TextArea } = Input;
 
 export type Question = {
@@ -40,10 +42,18 @@ export function Edit() {
   const [curQuestionId, setCurQuestionId] = useState<number>();
   // 表单中的字段名
   const [key, setKey] = useState<string>("json");
+  // 预览弹窗是否打开
+  const [isPreviewModalOpen, setPreviewModalOpen] = useState(false);
   // 当 curQuestionId 变化时，更新 form 中的字段值
   useEffect(() => {
-    form.setFieldsValue(json.filter((item) => item.id === curQuestionId)[0]);
-  }, [curQuestionId, form, json]);
+    // 只有当“属性”面板打开，且有选中题目时，才同步数据
+    if (curQuestionId && key === "属性") {
+      const currentData = json.find((item) => item.id === curQuestionId);
+      if (currentData) {
+        form.setFieldsValue(currentData);
+      }
+    }
+  }, [curQuestionId, form, json, key]); // 加上 key 依赖
 
   async function query() {
     if (!id) {
@@ -70,6 +80,7 @@ export function Edit() {
     }
   }
 
+  // 组件挂载时查询试卷数据
   useEffect(() => {
     //eslint-disable-next-line react-hooks/exhaustive-deps
     query();
@@ -151,12 +162,59 @@ export function Edit() {
     }),
   }));
 
+  // 保存试卷
+  async function saveExam() {
+    if (!id) {
+      return;
+    }
+    try {
+      const res = await examSave({
+        id: +id,
+        content: JSON.stringify(json),
+      });
+      if (res.status === 201 || res.status === 200) {
+        message.success("保存成功");
+      }
+    } catch (e) {
+      // 使用 axios 提供的检查工具
+      if (axios.isAxiosError(e)) {
+        // 此时 e 被自动识别为 AxiosError 类型
+        message.error(e.response?.data?.message || "登录失败，请检查网络");
+      } else {
+        // 处理非 Axios 错误（如代码逻辑错误）
+        message.error("发生意外错误");
+      }
+    }
+  }
+
   return (
     <div id="edit-container">
+      <PreviewModal
+        isOpen={isPreviewModalOpen}
+        json={json}
+        handleClose={() => {
+          setPreviewModalOpen(false);
+        }}
+      />
       <div className="header">
         <div>试卷编辑器</div>
 
-        <Button type="primary">预览</Button>
+        <div>
+          <Space>
+            <Button
+              type="default"
+              onClick={() => {
+                setPreviewModalOpen(true);
+              }}
+            >
+              预览
+            </Button>
+
+            <Button type="primary" onClick={saveExam}>
+              保存
+            </Button>
+          </Space>
+        </div>
       </div>
 
       <div className="body">
