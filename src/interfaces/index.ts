@@ -174,4 +174,9 @@ answerServiceInstance.interceptors.response.use(
 export async function answerAdd(data: { examId: number; content: string }) {
   return await answerServiceInstance.post("/answer/add", data);
 }
+
+// 获取答卷详情
+export async function answerFind(id: number) {
+  return await answerServiceInstance.get("/answer/find/" + id);
+}
 // #endregion
