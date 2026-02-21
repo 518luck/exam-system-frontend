@@ -11,6 +11,7 @@ import {
 import { ExamAddModal } from "./ExamAddModal";
 import { useNavigate } from "react-router";
 import { Typography } from "antd";
+import { RankingModal } from "./RankingModal";
 const { Paragraph } = Typography;
 interface Exam {
   id: number;
@@ -29,6 +30,10 @@ export function ExamList() {
   const [isExamAddModalOpen, setIsExamAddModalOpen] = useState(false);
   // 回收站
   const [bin, setBin] = useState(false);
+  // 排名弹窗
+  const [isRankingModalOpen, setIsRankingModalOpen] = useState(false);
+  // 当前试卷id
+  const [curExamId, setCurExamId] = useState<number>();
 
   // 查询考试列表
   async function query() {
@@ -156,6 +161,25 @@ export function ExamList() {
                     >
                       <Button type="default">考试链接</Button>
                     </Popover>
+                    <Button
+                      className="btn"
+                      type="primary"
+                      style={{ background: "orange" }}
+                      onClick={() => {
+                        setIsRankingModalOpen(true);
+                        setCurExamId(item.id);
+                      }}
+                    >
+                      排行榜
+                    </Button>
+                    <a
+                      href={
+                        "http://localhost:3003/answer/export?examId=" + item.id
+                      }
+                      download
+                    >
+                      导出所有答卷
+                    </a>
 
                     <Popconfirm
                       title="试卷删除"
@@ -184,6 +208,13 @@ export function ExamList() {
           setIsExamAddModalOpen(false);
           query();
         }}
+      />
+      <RankingModal
+        isOpen={isRankingModalOpen}
+        handleClose={() => {
+          setIsRankingModalOpen(false);
+        }}
+        examId={curExamId}
       />
     </div>
   );

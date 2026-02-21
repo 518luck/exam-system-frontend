@@ -180,3 +180,26 @@ export async function answerFind(id: number) {
   return await answerServiceInstance.get("/answer/find/" + id);
 }
 // #endregion
+
+// #region analyse 接口和实体
+const analyseServiceInstance = axios.create({
+  baseURL: "http://localhost:3004/",
+  timeout: 3000,
+});
+
+analyseServiceInstance.interceptors.request.use(requestInterceptor);
+
+analyseServiceInstance.interceptors.response.use(
+  responseIntercepor,
+  responseErrorIntercepor,
+);
+
+// 获取排名
+export async function ranking(examId: number) {
+  return await analyseServiceInstance.get("/analyse/ranking", {
+    params: {
+      examId,
+    },
+  });
+}
+// #endregion
