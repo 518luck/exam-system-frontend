@@ -23,7 +23,7 @@ const routes: RouteObject[] = [
     Component: UpdatePassword,
   },
   {
-    path: "exam/:id",
+    path: "edit/:id",
     Component: Edit,
   },
 ];

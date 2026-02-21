@@ -9,6 +9,7 @@ import {
   examUnpublish,
 } from "../../interfaces";
 import { ExamAddModal } from "./ExamAddModal";
+import { useNavigate } from "react-router";
 
 interface Exam {
   id: number;
@@ -19,6 +20,8 @@ interface Exam {
 }
 
 export function ExamList() {
+  // 导航函数
+  const navigate = useNavigate();
   // 考试列表
   const [list, setList] = useState<Array<Exam>>();
   // 新增试卷弹窗
@@ -136,6 +139,7 @@ export function ExamList() {
                       className="btn"
                       type="primary"
                       style={{ background: "green" }}
+                      onClick={() => navigate(`/edit/${item.id}`)}
                     >
                       编辑
                     </Button>
