@@ -63,7 +63,12 @@ export function Edit() {
       const res = await examFind(+id);
       if (res.status === 201 || res.status === 200) {
         try {
-          setJson(JSON.parse(res.data.content));
+          if (!res.data.content) {
+            setJson([]);
+            return;
+          }
+          const data = JSON.parse(res.data.content);
+          setJson(data);
         } catch {
           message.error("试卷数据格式错误");
         }
